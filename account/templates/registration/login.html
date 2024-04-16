@@ -1,0 +1,21 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}
+Login
+{% endblock %}
+
+{% block content %}
+<div class="form" style="height: 460px;">
+    <h2>Log in</h2>
+    <form action="{% url 'account:login' %}" method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="hidden" name="next" value="{{next}}">
+        <input type="submit" value="Login" class="login-btn">
+    </form>
+    <a href="{% url 'account:password_reset' %}"
+        style="display: inline-block; text-decoration: none; margin-left: 15px; margin-top: 30px; font-size: 18px; font-weight: 400;">Forgot
+        Password</a> or <a href="{% url 'account:register' %}"
+        style="display: inline-block; text-decoration: none; margin-top: 30px; font-size: 18px; font-weight: 400;">Register</a>
+</div>
+{% endblock %}

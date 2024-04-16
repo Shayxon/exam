@@ -11,6 +11,18 @@
 <body>
     <div id="header">
         <a href="/" class="logo">My shop</a>
+        <div class="user-auth">
+            {% if user.is_authenticated %}
+                <p>Welcome, {{ user.username }}!</p>
+                <a href="{% url 'account:edit' %}">Profile</a> <!-- New profile link -->
+                <form action="{% url 'account:logout' %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="Logout">
+                </form>
+            {% else %}
+                <a href="{% url 'account:login' %}">Login</a>
+            {% endif %}
+        </div>        
     </div>
     <div id="subheader">
         <div class="cart">

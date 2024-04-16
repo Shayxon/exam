@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'account.apps.AccountConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -139,3 +140,12 @@ CART_SESSION_ID = 'cart'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+
+LOGIN_REDIRECT_URL = 'shop:product_list'
+LOGIN_URL = 'account:login'
+LOGOUT_URL = 'account:logout'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'account.authentication.EmailAuthBackend',
+]
