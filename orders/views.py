@@ -4,8 +4,8 @@ from .forms import OrderCreateForm
 from .models import Order, OrderItem
 from .tasks import order_created
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count
 
+@login_required
 def order_create(request):
     cart = Cart(request)
     if request.method == 'POST':
