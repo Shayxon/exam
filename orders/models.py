@@ -1,5 +1,6 @@
 from django.db import models
 from shop.models import Product
+from account.models import Profile
 
 class Order(models.Model):
     first_name = models.CharField(max_length=50)
@@ -25,6 +26,7 @@ class Order(models.Model):
         return sum(item.get_cost() for item in self.items.all())
 
 class OrderItem(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='orders')
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, related_name='order_items', on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2)
