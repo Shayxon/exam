@@ -3,6 +3,9 @@ from django.contrib.auth.decorators import login_required
 from .forms import RegisterForm, UserEditForm, ProfileEditForm
 from .models import Profile
 
+from rest_framework import generics
+from .serializers import UserSerializer
+
 @login_required
 def edit(request):
     if request.method == "POST":
@@ -33,3 +36,6 @@ def register(request):
     else:
         form = RegisterForm()
     return render(request, 'account/register.html', {'form':form})
+
+class UserCreateView(generics.CreateAPIView):
+    serializer_class = UserSerializer
