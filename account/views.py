@@ -4,7 +4,9 @@ from .forms import RegisterForm, UserEditForm, ProfileEditForm
 from .models import Profile
 
 from rest_framework import generics
-from .serializers import UserSerializer
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.settings import api_settings
+from .serializers import UserSerializer, TokenSerializer
 
 @login_required
 def edit(request):
@@ -39,3 +41,7 @@ def register(request):
 
 class UserCreateView(generics.CreateAPIView):
     serializer_class = UserSerializer
+
+class TokenCreateView(ObtainAuthToken):
+    serializer_class = TokenSerializer
+    renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
