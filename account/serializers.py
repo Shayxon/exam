@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model, authenticate
+from .models import Profile
 
 from rest_framework import serializers
 
@@ -10,7 +11,9 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True, 'min_length':8}}
 
     def create(self, validated_data):
-        return get_user_model().objects.create(**validated_data) 
+        user = get_user_model().objects.create(**validated_data) 
+        Profile.objects.create(user=user)
+        return user
     
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
