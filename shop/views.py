@@ -2,6 +2,10 @@ from django.shortcuts import render, get_object_or_404
 from .models import Category, Product
 from cart.forms import CartAddProductForm
 
+from .serializers import CategorySerializer, ProductSerializer
+from rest_framework.settings import api_settings
+from rest_framework import authentication, permissions, viewsets
+
 def product_list(request, category_slug=None):
     category = None
     categories = Category.objects.all()
@@ -18,3 +22,15 @@ def product_detail(request, id, slug):
 
     return render(request, 'shop/product/detail.html', {'product': product, 'cart_product_form': cart_product_form})  
 
+
+class ManageCategoryView(viewsets.ModelViewSet):
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+class ManageProductView(viewsets.ModelViewSet):
+    serializer_class = ProductSerializer
+    queryset = Product.objects.all()
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]    

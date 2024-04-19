@@ -5,6 +5,9 @@ from .models import Order, OrderItem
 from .tasks import order_created
 from django.contrib.auth.decorators import login_required
 
+from .serializers import OrderItemSerializer, OrderSerializer
+from rest_framework import generics, authentication, permissions
+
 @login_required
 def order_create(request):
     cart = Cart(request)
@@ -32,3 +35,16 @@ def order_create(request):
 def history(request):
     orders = Order.objects.filter(items__profile=request.user.profile).order_by('-id').distinct('id')
     return render(request, 'orders/history.html', {'orders': orders})
+
+
+class OrderView(generics.ListAPIView):
+    serializer_class = OrderSerializer
+    queryset = Order.objects.all()
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+class OrderItemView(generics.ListAPIView):
+    serializer_class = OrderItemSerializer
+    queryset = OrderItem.objects.all()
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]    
