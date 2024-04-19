@@ -57,4 +57,4 @@ class OrderItemTotal(generics.ListAPIView):
 
     def get(self, request, *args, **kwargs):
         total_cost = OrderItem.objects.all().aggregate(total_cost=Sum('price'))['total_cost']
-        return Response({"total_cost": total_cost})      
+        return Response({"total_cost": total_cost})  
