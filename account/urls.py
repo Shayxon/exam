@@ -10,4 +10,6 @@ urlpatterns = [
     path('api/create/', views.UserCreateView.as_view(), name='create'),
     path('token/', views.TokenCreateView.as_view(), name='token'),
     path('me/', views.ManageUserView.as_view(), name='me'),
+    path('user-orders/<str:user_id>/', views.UserOrders.as_view(), name='user_orders'),
+    path('user-orders-100/<str:user_id>/', views.UserOrders100.as_view(), name='user_orders_100'),
 ]

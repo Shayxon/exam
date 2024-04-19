@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 
 from .serializers import OrderItemSerializer, OrderSerializer
 from rest_framework import generics, authentication, permissions
+from rest_framework.response import Response
+from django.db.models import Sum
 
 @login_required
 def order_create(request):
@@ -47,4 +49,12 @@ class OrderItemView(generics.ListAPIView):
     serializer_class = OrderItemSerializer
     queryset = OrderItem.objects.all()
     authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticated]    
+    permission_classes = [permissions.IsAuthenticated]
+
+class OrderItemTotal(generics.ListAPIView):
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAdminUser]
+
+    def get(self, request, *args, **kwargs):
+        total_cost = OrderItem.objects.all().aggregate(total_cost=Sum('price'))['total_cost']
+        return Response({"total_cost": total_cost})      

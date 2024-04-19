@@ -48,3 +48,7 @@ class TokenSerializer(serializers.Serializer):
         
         attrs['user'] = user
         return attrs
+
+
+class UserOrderSerializer(serializers.Serializer):
+    user_id = serializers.CharField()

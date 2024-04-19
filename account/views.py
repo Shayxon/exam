@@ -6,7 +6,10 @@ from .models import Profile
 from rest_framework import generics, authentication, permissions
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
-from .serializers import UserSerializer, TokenSerializer
+from .serializers import UserSerializer, TokenSerializer, UserOrderSerializer
+from orders.models import OrderItem
+from rest_framework.response import Response
+from django.db.models import Sum
 
 @login_required
 def edit(request):
@@ -53,3 +56,28 @@ class ManageUserView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_object(self):
         return self.request.user
+    
+class UserOrders(generics.ListAPIView):
+    serializer_class = UserOrderSerializer
+    queryset = OrderItem.objects.all()
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAdminUser]
+
+    def get_queryset(self):
+        user_id = self.kwargs.get('user_id')
+        return OrderItem.objects.filter(profile__user_id=user_id)
+    
+
+class UserOrders100(generics.ListAPIView):
+    serializer_class = UserOrderSerializer
+    queryset = OrderItem.objects.all()
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAdminUser]
+
+    def get(self, request, user_id, *args, **kwargs):
+        total_cost = OrderItem.objects.filter(profile__user_id=user_id).aggregate(total_cost=Sum('price'))['total_cost']
+        if total_cost is None:
+            total_cost = 0
+        more_than_100_dollars = total_cost > 100
+        return Response({"more_than_100_dollars": more_than_100_dollars})
+
