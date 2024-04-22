@@ -6,7 +6,7 @@ from .tasks import order_created
 from django.contrib.auth.decorators import login_required
 
 from .serializers import OrderItemSerializer, OrderSerializer
-from rest_framework import generics, authentication, permissions
+from rest_framework import generics, authentication, permissions, viewsets
 from rest_framework.response import Response
 from django.db.models import Sum
 
@@ -39,13 +39,13 @@ def history(request):
     return render(request, 'orders/history.html', {'orders': orders})
 
 
-class OrderView(generics.ListAPIView):
+class ManageOrderView(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     queryset = Order.objects.all()
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
-class OrderItemView(generics.ListAPIView):
+class ManageOrderItemView(viewsets.ModelViewSet):
     serializer_class = OrderItemSerializer
     queryset = OrderItem.objects.all()
     authentication_classes = [authentication.TokenAuthentication]
